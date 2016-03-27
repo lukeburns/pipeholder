@@ -18,5 +18,6 @@ test('repipes sources and destination', function (t) {
   r.on('piped', function (dest) {
     t.equal(dest, destination);
   });
+
   holder.place(r);
 });

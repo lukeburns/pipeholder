@@ -1,7 +1,7 @@
 {
   "name": "pipeholder",
   "description": "create placeholder streams that can be replaced at an arbitrary time after piping.",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "repository": {
     "url": "git://github.com/lukeburns/pipeholder.git"
   },
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "readable-stream": "^1.0.27-1",
-    "piped": "^1.0.0"
+    "piped": "^2.0.0"
   },
   "devDependencies": {
     "tape": "^2.14.0"

@@ -1,35 +1,38 @@
-var Duplex = require('readable-stream/duplex');
+var PassThrough = require('stream').PassThrough;
 var piped = require('piped');
 
 module.exports = pipeholder;
 
-function pipeholder () {
+function pipeholder (stream) {
 
-  var sources = [];
-  var destinations = [];
+  stream = piped(stream || new PassThrough);
 
-  duplex = piped(new Duplex);
-  duplex._read = function () {}
-  duplex._write = function () {}
-  duplex.place = function (stream) {
-    for (var i = 0; i < sources.length; i++) {
-      sources[i].pipe(stream);
+  stream.sources = []
+  stream.destinations = []
+
+  stream.place = function (ns) {
+    if (ns.writable) {
+      for (var i = 0; i < stream.sources.length; i++) {
+        stream.sources[i].pipe(ns);
+      }
     }
-    for (var i = 0; i < destinations.length; i++) {
-      stream.pipe(destinations[i]);
+    if (ns.readable) {
+      for (var i = 0; i < stream.destinations.length; i++) {
+        ns.pipe(stream.destinations[i]);
+      }
     }
   }
 
-  duplex.on('pipe', function (src) {
-    sources.push(src);
+  stream.on('pipe', function (src) {
     src.unpipe(this);
+    stream.sources.push(src);
   });
 
-  duplex.on('piped', function (dest) {
-    destinations.push(dest);
+  stream.on('piped', function (dest) {
     this.unpipe(dest);
+    stream.destinations.push(dest);
   });
 
-  return duplex;
+  return stream;
 
 }
